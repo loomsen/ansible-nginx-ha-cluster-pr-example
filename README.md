@@ -12,7 +12,7 @@ Checkout the repo, install requirements, cd into the roles/generic_loadbalancer 
 This is the setup after converge. Active-active nginx cluster with keepalived managing the IPs.
 ```
 |  nginx - glb-001 | <-- keepalived active/active --> |  nginx - glb-002 |
-| vip: 10.10.10.10 | <-- keepalived active/active --> | vip: 10.10.10.10 |
+| vip: 10.10.10.10 | <-- keepalived active/active --> | vip: 10.10.10.11 |
 ```
 ##### Side-Effect
 Our side-effect playbook now kills nginx on the first host. We are expecting the keepalived to move over the IP to the second host.
