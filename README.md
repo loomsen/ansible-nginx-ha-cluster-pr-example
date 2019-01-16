@@ -22,6 +22,69 @@ Our side-effect playbook now kills nginx on the first host. We are expecting the
 | vip: move ip to glb-002   | <-- keepalived active/active --> | ip: 10.10.10.10, 10.10.10.11 |
 ```
 
+## Tests
+
+#### common tests
+These tests should run on both nodes:
+
+```yaml
+---
+package:
+  nginx:
+    installed: true
+  keepalived:
+    installed: true
+user:
+  nginx:
+    exists: true
+    groups:
+    - nginx
+    home: /var/lib/nginx
+    shell: /sbin/nologin
+group:
+  nginx:
+    exists: true
+```
+
+#### node specific tests
+This test should run only on node2, where we expect both our VIPs to be now.
+```yaml
+---
+service:
+  nginx:
+    enabled: true
+    running: true
+port:
+  tcp:80:
+    listening: true
+    ip:
+      - 0.0.0.0
+eth0:
+  exists: true
+  addrs:
+    - 10.10.10.11/32
+    - 10.10.10.10/32
+```
+
+This test should run only on node1, where we killed nginx.
+```yaml
+---
+service:
+  nginx:
+    enabled: true
+    running: false
+port:
+  tcp:80:
+    listening: false
+
+eth0:
+  exists: true
+  addrs: []
+
+```
+
+
+
 ##### example output
 Here's what a test run looks like.
 ```
