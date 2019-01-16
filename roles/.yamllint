@@ -1,0 +1,22 @@
+extends: default
+
+rules:
+  braces:
+    max-spaces-inside: 1
+    level: error
+  brackets:
+    max-spaces-inside: 1
+    level: error
+  colons:
+    max-spaces-before: 0
+    max-spaces-after: 1
+  line-length: disable
+  truthy: disable
+  comments:
+    require-starting-space: true
+  comments-indentation: disable
+  hyphens:
+    max-spaces-after: 1
+  indentation:
+    indent-sequences: consistent
+  new-line-at-end-of-file: enable

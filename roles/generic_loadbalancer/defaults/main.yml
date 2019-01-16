@@ -1,0 +1,6 @@
+---
+# defaults file for generic_loadbalancer
+generic_loadbalancer:
+  vip:
+  - 10.10.10.10
+  - 10.10.10.11

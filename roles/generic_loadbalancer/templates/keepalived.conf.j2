@@ -1,0 +1,74 @@
+global_defs {
+}
+
+vrrp_script chk_nginx {
+    script "pidof nginx"
+    interval 2
+}
+
+vrrp_instance VI_1 {
+    interface {{ ansible_default_ipv4.interface | default('eth0')  }}
+    state BACKUP
+{% if ( ansible_fqdn | regex_replace('^[^\\.]+([1-9]+)\\..*','\\1') | int % 2) == 1  %}
+    priority          101
+{% else %}
+    priority          100
+{%endif%}
+
+    virtual_router_id 220
+    unicast_src_ip {{ ansible_default_ipv4.address }}
+    unicast_peer {
+{% for h in groups.generic_loadbalancer | difference([inventory_hostname]) %}
+        {{ hostvars[h]['ansible_default_ipv4']['address']  }} 
+{%endfor%}
+    }
+
+    authentication {
+        auth_type PASS
+        auth_pass {{ ansible_domain | checksum | default('keepalived_auth_pass') }}
+    }
+
+    track_script {
+        chk_nginx
+    }
+
+    virtual_ipaddress {
+        {{ generic_loadbalancer.vip.0 }}
+    }
+
+}
+
+{% if generic_loadbalancer.vip.1 is defined %}
+vrrp_instance VI_2 {
+    interface {{ ansible_default_ipv4.interface | default('eth0')  }}
+    state BACKUP
+{% if ( ansible_fqdn | regex_replace('^[^\\.]+([1-9]+)\\..*','\\1') | int % 2) == 1  %}
+    priority          100
+{% else %}
+    priority          101
+{%endif%}
+
+    virtual_router_id 221
+    unicast_src_ip {{ ansible_default_ipv4.address }}
+    unicast_peer {
+{% for h in groups.generic_loadbalancer | difference([inventory_hostname]) %}
+        {{ hostvars[h]['ansible_default_ipv4']['address']  }} 
+{%endfor%}
+    }
+
+    authentication {
+        auth_type PASS
+        auth_pass {{ ansible_domain | checksum | default('keepalived_auth_pass') }}
+    }
+
+    track_script {
+        chk_nginx
+    }
+
+    virtual_ipaddress {
+        {{ generic_loadbalancer.vip.1 }}
+    }
+
+}
+
+{% endif %}

@@ -1,0 +1,7 @@
+---
+# handlers file for generic_loadbalancer
+
+- name: restart keepalived
+  systemd:
+    name: keepalived
+    state: restarted

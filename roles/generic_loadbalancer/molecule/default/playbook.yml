@@ -1,0 +1,5 @@
+---
+- name: Converge
+  hosts: generic_loadbalancer
+  roles:
+    - role: generic_loadbalancer

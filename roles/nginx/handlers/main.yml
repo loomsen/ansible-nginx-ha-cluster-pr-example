@@ -1,0 +1,31 @@
+---
+# handlers file for nginx
+
+- name: enable nginx
+  systemd:
+    name: nginx
+    enabled: true
+
+- name: reload nginx
+  systemd:
+    name: nginx
+    state: reloaded
+
+- name: restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+
+- name: validate nginx configuration
+  command: nginx -t -c /etc/nginx/nginx.conf
+  changed_when: false
+
+- name: enable rngd
+  systemd:
+    name: rngd
+    enabled: true
+    state: started
+
+- name: reload systemd
+  systemd:
+    daemon_reload: true

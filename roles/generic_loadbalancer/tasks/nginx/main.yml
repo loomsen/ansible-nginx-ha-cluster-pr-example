@@ -1,0 +1,10 @@
+---
+
+- name: nginx | create fallback vhost
+  template:
+    src: fallback.conf.j2
+    dest: /etc/nginx/conf.d/fallback.conf
+    owner: nginx
+    group: nginx
+  notify:
+    - reload nginx

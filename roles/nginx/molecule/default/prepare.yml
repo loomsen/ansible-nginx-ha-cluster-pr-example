@@ -1,0 +1,14 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install requirements
+      yum:
+        name: "{{ item }}"
+        state: installed
+      with_items:
+        - systemd
+        - systemd-libs
+        - initscripts
+        - epel-release

@@ -1,0 +1,13 @@
+---
+- name: kill nginx on glb-001
+  gather_facts: false
+  hosts:
+    - glb-001.example.com
+  become: true
+  tasks:
+    - name: stop nginx
+      service:
+        name: nginx
+        state: stopped
+    - name: wait for keepalived to move IP
+      shell: sleep 5

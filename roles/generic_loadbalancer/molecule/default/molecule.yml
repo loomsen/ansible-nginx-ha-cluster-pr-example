@@ -1,0 +1,56 @@
+---
+dependency:
+  name: gilt
+driver:
+  name: docker
+lint:
+  name: yamllint
+  options:
+    config-file: ../.yamllint
+platforms:
+  - name: glb-001.example.com
+    image: centos:latest
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    capabilities:
+      - SYS_ADMIN
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+    sysctls:
+      net.ipv4.ip_nonlocal_bind: 1
+    groups:
+      - generic_loadbalancer
+  - name: glb-002.example.com
+    image: centos:latest
+    command: /sbin/init
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    capabilities:
+      - SYS_ADMIN
+      - NET_ADMIN
+      - NET_BIND_SERVICE
+    sysctls:
+      net.ipv4.ip_nonlocal_bind: 1
+    groups:
+      - generic_loadbalancer
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      jinja2_extensions: jinja2.ext.do
+      callback_whitelist: profile_tasks
+  lint:
+    name: ansible-lint
+  playbooks:
+    side_effect: side_effect.yml
+scenario:
+  name: default
+verifier:
+  name: goss
+  lint:
+    name: yamllint
+    options:
+      config-file: ../.yamllint

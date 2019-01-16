@@ -1,0 +1,16 @@
+---
+package:
+  nginx:
+    installed: true
+  keepalived:
+    installed: true
+user:
+  nginx:
+    exists: true
+    groups:
+    - nginx
+    home: /var/lib/nginx
+    shell: /sbin/nologin
+group:
+  nginx:
+    exists: true

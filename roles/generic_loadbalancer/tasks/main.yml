@@ -1,0 +1,10 @@
+---
+# tasks file for generic_loadbalancer
+- name: gather facts from all servers in cluster
+  setup:
+  delegate_to: "{{item}}"
+  delegate_facts: True
+  loop: "{{groups['generic_loadbalancer']}}"
+
+- include_tasks: keepalived.yml
+- include_tasks: nginx/main.yml
